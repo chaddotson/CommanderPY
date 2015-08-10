@@ -1,3 +1,7 @@
+"""
+This script is responsible for checking twitter for direct messages and putting the source/message on the queue.
+"""
+
 from argparse import ArgumentParser
 from ConfigParser import RawConfigParser
 from json import dumps
