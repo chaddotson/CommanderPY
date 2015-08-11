@@ -1,5 +1,9 @@
-from json import JSONEncoder
+from json import JSONDecoder, JSONEncoder, loads
+from json.decoder import WHITESPACE
+
 import tweepy
+
+
 
 
 def get_twitter_api(consumer_key, consumer_secret, access_key, access_secret):
@@ -14,6 +18,9 @@ class TwitterDM(object):
         self.from_screen_name = from_scren_name
         self.message_text = message_text
 
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+
 
 class TwitterDMEncoder(JSONEncoder):
 
@@ -27,3 +34,11 @@ class TwitterDMEncoder(JSONEncoder):
             return JSONEncoder.encode(self, obj_as_dict)
 
         return JSONEncoder.encode(self, obj)
+
+
+class TwitterDMDecoder(JSONDecoder):
+    def decode(self, s, _w=WHITESPACE.match):
+        obj_as_dict = JSONDecoder.decode(self, s, _w)
+        return TwitterDM(obj_as_dict.get("FROM_ID", None),
+                         obj_as_dict.get("FROM_SCREEN_NAME", None),
+                         obj_as_dict.get("MESSAGE_TEXT", None))

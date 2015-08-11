@@ -1,7 +1,7 @@
 
 from unittest import TestCase
 
-from common.twitter import get_twitter_api, TwitterDM, TwitterDMEncoder
+from common.twitter import get_twitter_api, TwitterDM, TwitterDMEncoder, TwitterDMDecoder
 
 # def get_twitter_api(consumer_key, consumer_secret, access_key, access_secret):
 #     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -23,6 +23,21 @@ class TwitterDMEncoderTests(TestCase):
 
         self.assertDictEqual(retrieved, dict(FROM_ID=1, FROM_SCREEN_NAME="Someone", MESSAGE_TEXT="Test"))
 
+class TwitterDMDecoderTests(TestCase):
+    def test_can_decode_twitter_dm_as_json(self):
+
+        jsonstring = """{"FROM_ID":1, "FROM_SCREEN_NAME":"Someone", "MESSAGE_TEXT":"Test"}"""
+        expected = TwitterDM(1, "Someone", "Test")
+        got = loads(jsonstring, cls=TwitterDMDecoder)
+
+        self.assertEqual(got, expected)
+
+        # converted = dumps(dm, cls=TwitterDMEncoder)
+        #
+        # retrieved = loads(converted)
+        #
+        # self.assertDictEqual(retrieved, dict(FROM_ID=1, FROM_SCREEN_NAME="Someone", MESSAGE_TEXT="Test"))
+        #
 
 #
 #
