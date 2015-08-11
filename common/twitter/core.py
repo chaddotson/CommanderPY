@@ -14,9 +14,6 @@ class TwitterDM(object):
         self.from_screen_name = from_scren_name
         self.message_text = message_text
 
-    def __str__(self):
-        pass
-
 
 class TwitterDMEncoder(JSONEncoder):
 
