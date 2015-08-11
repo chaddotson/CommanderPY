@@ -4,8 +4,6 @@ from json.decoder import WHITESPACE
 import tweepy
 
 
-
-
 def get_twitter_api(consumer_key, consumer_secret, access_key, access_secret):
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_key, access_secret)
