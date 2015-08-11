@@ -20,9 +20,9 @@ class TwitterDMEncoder(JSONEncoder):
     def encode(self, obj):
 
         if isinstance(obj, TwitterDM):
-            obj_as_dict = dict(From_id=obj.from_id,
-                               from_screen_name=str(obj.from_screen_name),
-                               message_text=str(obj.message_text))
+            obj_as_dict = dict(FROM_ID=obj.from_id,
+                               FROM_SCREEN_NAME=str(obj.from_screen_name),
+                               MESSAGE_TEXT=str(obj.message_text))
 
             return JSONEncoder.encode(self, obj_as_dict)
 
