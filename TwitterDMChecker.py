@@ -11,7 +11,7 @@ from werkzeug.utils import import_string
 
 from common.persistance import PersistentDict
 from common.twitter import get_twitter_api, TwitterDM, TwitterDMEncoder
-from common.rabbit import BasicBlockingPublisher
+from common.rabbit import MessageQueueBlockingPublisher
 
 
 logger = getLogger(__name__)
@@ -59,7 +59,7 @@ if __name__ =="__main__":
 
     logger.info("Fetched %d twitter direct messages", len(messages) if messages is not None else 0)
 
-    publisher = BasicBlockingPublisher(MESSAGE_QUEUE_HOST, MESSAGE_QUEUE_USER, MESSAGE_QUEUE_PASS)
+    publisher = MessageQueueBlockingPublisher(MESSAGE_QUEUE_HOST, MESSAGE_QUEUE_USER, MESSAGE_QUEUE_PASS)
 
     for message in messages:
         dm = TwitterDM(message.sender.id, message.sender.screen_name, message.text)

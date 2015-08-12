@@ -1,18 +1,21 @@
-import pika
+from pika import BlockingConnection, ConnectionParameters, PlainCredentials
 
 from logging import getLogger
 
 logger = getLogger(__name__)
 
 
-class BasicBlockingPublisher(object):
+# class MessageQueueConnectionError(pika.exceptions.AMQPConnectionError):
+#     pass
+
+class MessageQueueBlockingPublisher(object):
     def __init__(self, host, user, password):
 
         logger.info("Connecting to RabbitMQ - Host: %s.", host)
 
-        message_broker_credentials = pika.PlainCredentials(user, password)
+        message_broker_credentials = PlainCredentials(user, password)
 
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(
+        self.connection = BlockingConnection(ConnectionParameters(
             host=host, credentials=message_broker_credentials))
 
         self.channel = self.connection.channel()

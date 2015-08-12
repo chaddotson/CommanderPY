@@ -1,1 +1,1 @@
-from .core import BasicBlockingPublisher
+from .core import MessageQueueBlockingPublisher
