@@ -10,11 +10,10 @@ from json import dumps
 from logging import getLogger
 from logging.config import dictConfig
 
-from werkzeug.utils import import_string
-
 from CommanderPy.common.persistance import PersistentDict
 from CommanderPy.common.twitter import get_twitter_api, TwitterDM, TwitterDMEncoder
 from CommanderPy.common.rabbit import MessageQueueBlockingPublisher
+from CommanderPy.settings import DefaultConfiguration as settings
 
 
 logger = getLogger(__name__)
@@ -34,20 +33,8 @@ def get_messages(twitter_api, last_dm_id=None):
     else:
         return twitter_api.direct_messages(last_dm_id)
 
-def load_settings():
-
-    from CommanderPy.settings import DefaultConfiguration as settings
-
-    return settings
-
-
-
 def main():
     args = get_args()
-
-    # settings = import_string('settings.DefaultConfiguration')
-    # dictConfig(settings.LOGGING)
-    settings = load_settings()
 
     dictConfig(settings.LOGGING)
 
