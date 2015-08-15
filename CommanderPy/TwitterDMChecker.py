@@ -33,6 +33,7 @@ def get_messages(twitter_api, last_dm_id=None):
     else:
         return twitter_api.direct_messages(last_dm_id)
 
+
 def main():
     args = get_args()
 
@@ -41,10 +42,10 @@ def main():
     config = RawConfigParser()
     config.read(args.settings_file)
 
-    MESSAGE_QUEUE_HOST = config.get("MESSAGE_QUEUE", "HOST")
-    MESSAGE_QUEUE_USER = config.get("MESSAGE_QUEUE", "USER")
-    MESSAGE_QUEUE_PASS = config.get("MESSAGE_QUEUE", "PASS")
-    MESSAGE_QUEUE_NAME = config.get("MESSAGE_QUEUE", "NAME")
+    message_queue_host = config.get("MESSAGE_QUEUE", "HOST")
+    message_queue_user = config.get("MESSAGE_QUEUE", "USER")
+    message_queue_pass = config.get("MESSAGE_QUEUE", "PASS")
+    message_queue_name = config.get("MESSAGE_QUEUE", "NAME")
 
     state = PersistentDict(args.persistance_file)
 
@@ -61,11 +62,11 @@ def main():
     if len(messages) == 0:
         return
 
-    publisher = MessageQueueBlockingPublisher(MESSAGE_QUEUE_HOST, MESSAGE_QUEUE_USER, MESSAGE_QUEUE_PASS)
+    publisher = MessageQueueBlockingPublisher(message_queue_host, message_queue_user, message_queue_pass)
 
     for message in messages:
         dm = TwitterDM(message.sender.id, message.sender.screen_name, message.text)
-        publisher.publish(MESSAGE_QUEUE_NAME, message=dumps(dm, cls=TwitterDMEncoder))
+        publisher.publish(message_queue_name, message=dumps(dm, cls=TwitterDMEncoder))
 
     if len(messages) > 0:
         state['last_dm_id'] = messages[-1].id
