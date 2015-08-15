@@ -1,7 +1,4 @@
-
-from unittest import TestCase
-
-from common.twitter import get_twitter_api, TwitterDM, TwitterDMEncoder, TwitterDMDecoder
+from CommanderPy.common.twitter import TwitterDM, TwitterDMEncoder, TwitterDMDecoder
 
 # def get_twitter_api(consumer_key, consumer_secret, access_key, access_secret):
 #     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)

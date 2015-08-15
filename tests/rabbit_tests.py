@@ -1,13 +1,13 @@
+from unittest import TestCase
 
 from mock import patch
 from pika.exceptions import AMQPConnectionError
-from unittest import TestCase
 
-from common.rabbit import MessageQueueBlockingPublisher
+from CommanderPy.common.rabbit import MessageQueueBlockingPublisher
 
 
 class RabbitTests(TestCase):
-    @patch("common.rabbit.core.BlockingConnection")
+    @patch("CommanderPy.common.rabbit.core.BlockingConnection")
     def test_can_handle_connection_error(self,  queue_mock):
 
         queue_mock.side_effect = AMQPConnectionError

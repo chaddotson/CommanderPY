@@ -1,3 +1,5 @@
+#!/bin/python
+
 """
 This script is responsible for checking twitter for direct messages and putting the source/message on the queue.
 """
@@ -7,11 +9,12 @@ from ConfigParser import RawConfigParser
 from json import dumps
 from logging import getLogger
 from logging.config import dictConfig
+
 from werkzeug.utils import import_string
 
-from common.persistance import PersistentDict
-from common.twitter import get_twitter_api, TwitterDM, TwitterDMEncoder
-from common.rabbit import MessageQueueBlockingPublisher
+from CommanderPy.common.persistance import PersistentDict
+from CommanderPy.common.twitter import get_twitter_api, TwitterDM, TwitterDMEncoder
+from CommanderPy.common.rabbit import MessageQueueBlockingPublisher
 
 
 logger = getLogger(__name__)
@@ -31,13 +34,22 @@ def get_messages(twitter_api, last_dm_id=None):
     else:
         return twitter_api.direct_messages(last_dm_id)
 
+def load_settings():
 
-if __name__ =="__main__":
+    from CommanderPy.settings import DefaultConfiguration as settings
 
-    settings = import_string('settings.DefaultConfiguration')
-    settings = dictConfig(settings.LOGGING)
+    return settings
 
+
+
+def main():
     args = get_args()
+
+    # settings = import_string('settings.DefaultConfiguration')
+    # dictConfig(settings.LOGGING)
+    settings = load_settings()
+
+    dictConfig(settings.LOGGING)
 
     config = RawConfigParser()
     config.read(args.settings_file)
@@ -50,14 +62,17 @@ if __name__ =="__main__":
     state = PersistentDict(args.persistance_file)
 
     api = get_twitter_api(
-        config.get("TWEETER", "CONSUMER_KEY"),
-        config.get("TWEETER", "CONSUMER_SECRET"),
-        config.get("TWEETER", "ACCESS_KEY"),
-        config.get("TWEETER", "ACCESS_SECRET"))
+        config.get("TWITTER", "CONSUMER_KEY"),
+        config.get("TWITTER", "CONSUMER_SECRET"),
+        config.get("TWITTER", "ACCESS_KEY"),
+        config.get("TWITTER", "ACCESS_SECRET"))
 
     messages = get_messages(api, state.get('last_dm_id', None))
 
     logger.info("Fetched %d twitter direct messages", len(messages) if messages is not None else 0)
+
+    if len(messages) == 0:
+        return
 
     publisher = MessageQueueBlockingPublisher(MESSAGE_QUEUE_HOST, MESSAGE_QUEUE_USER, MESSAGE_QUEUE_PASS)
 
@@ -69,3 +84,7 @@ if __name__ =="__main__":
         state['last_dm_id'] = messages[-1].id
 
     state.sync()
+
+
+if __name__ =="__main__":
+    main()
