@@ -16,12 +16,13 @@ with open("requirements.txt", "r'") as f:
 setup(name='CommanderPy',
       version='1.0',
       packages=['CommanderPy', 'CommanderPy.common',
-                'CommanderPy.common.rabbit', 'CommanderPy.common.twitter'],
+                'CommanderPy.common.rabbit', 'CommanderPy.common.twitter',
+                'CommanderPy.scripts'],
       install_requires=install_reqs,
       include_package_data=True,
       entry_points={
           'console_scripts': [
-              'twitterdmchecker = CommanderPy.TwitterDMChecker:main',
+              'twitterdmchecker = CommanderPy.scripts.TwitterDMChecker:main',
           ]
       }
 )

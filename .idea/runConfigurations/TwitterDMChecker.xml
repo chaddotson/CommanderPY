@@ -12,7 +12,7 @@
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <module name="CommanderPY" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CommanderPy/TwitterDMChecker.py" />
+    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CommanderPy/scripts/TwitterDMChecker.py" />
     <option name="PARAMETERS" value="twitter.cfg state.sav" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <method />
