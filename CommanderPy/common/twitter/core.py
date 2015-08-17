@@ -24,6 +24,18 @@ class TwitterDM(object):
         return self.__dict__ == other.__dict__
 
 
+# TODO: this looks exactly like TwitterDM... might unify into TwitterMessage?
+class TwitterMention(object):
+    def __init__(self, id, from_id, from_screen_name, message_text):
+        self.id = id
+        self.from_id = from_id
+        self.from_screen_name = from_screen_name
+        self.message_text = message_text
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+
+
 class TwitterDMEncoder(JSONEncoder):
 
     def encode(self, obj):
@@ -46,6 +58,32 @@ class TwitterDMDecoder(JSONDecoder):
                          obj_as_dict.get("FROM_ID", None),
                          obj_as_dict.get("FROM_SCREEN_NAME", None),
                          obj_as_dict.get("MESSAGE_TEXT", None))
+
+
+# TODO: this looks exactly like TwitterDMEncoder... might unify into TwitterMessageEncoder?
+class TwitterMentionEncoder(JSONEncoder):
+
+    def encode(self, obj):
+
+        if isinstance(obj, TwitterMention):
+            obj_as_dict = dict(ID=obj.id,
+                               FROM_ID=obj.from_id,
+                               FROM_SCREEN_NAME=str(obj.from_screen_name),
+                               MESSAGE_TEXT=str(obj.message_text))
+
+            return JSONEncoder.encode(self, obj_as_dict)
+
+        return JSONEncoder.encode(self, obj)
+
+
+# TODO: this looks exactly like TwitterDMDecoder... might unify into TwitterMessageDecoder?
+class TwitterMentionDecoder(JSONDecoder):
+    def decode(self, s, _w=WHITESPACE.match):
+        obj_as_dict = JSONDecoder.decode(self, s, _w)
+        return TwitterMention(obj_as_dict.get("ID", None),
+                              obj_as_dict.get("FROM_ID", None),
+                              obj_as_dict.get("FROM_SCREEN_NAME", None),
+                              obj_as_dict.get("MESSAGE_TEXT", None))
 
 
 def tweet(consumer_key, consumer_secret, access_key, access_secret, message):

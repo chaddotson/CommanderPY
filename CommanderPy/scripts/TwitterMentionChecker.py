@@ -11,7 +11,8 @@ from logging import getLogger
 from logging.config import dictConfig
 
 from CommanderPy.common.persistance import PersistentDict
-from CommanderPy.common.twitter import get_twitter_api, TwitterDM, TwitterDMEncoder
+from CommanderPy.common.twitter import get_twitter_api, TwitterMentionEncoder, TwitterMention
+
 from CommanderPy.common.rabbit import MessageQueueBlockingPublisher
 from CommanderPy.settings import DefaultConfiguration as settings
 
@@ -60,18 +61,12 @@ def main():
 
     logger.info("Fetched %d twitter mentions", len(messages) if messages is not None else 0)
 
-    for message in messages:
-        print message
+    publisher = MessageQueueBlockingPublisher(message_queue_host, message_queue_user, message_queue_pass)
 
-    # if len(messages) == 0:
-    #     return
-    #
-    # publisher = MessageQueueBlockingPublisher(message_queue_host, message_queue_user, message_queue_pass)
-    #
-    # for message in messages:
-    #     dm = TwitterDM(message.sender.id, message.sender.screen_name, message.text)
-    #     publisher.publish(message_queue_name, message=dumps(dm, cls=TwitterDMEncoder))
-    #
+    for message in messages:
+        mention = TwitterMention(message.id, message.user.id, message.user.screen_name, message.text)
+        publisher.publish(message_queue_name, message=dumps(mention, cls=TwitterMentionEncoder))
+
     if len(messages) > 0:
         state['last_mention_id'] = messages[-1].id
 
