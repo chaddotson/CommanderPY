@@ -20,7 +20,14 @@ class TwitterAPIWrapper(object):
         return tweepy.API(auth)
 
     def get_direct_messages(self, **kwargs):
-        messages = self._api.direct_messages()
+        """
+        This matches the twitter api calls.
+        Notables:
+            last_id = last id to get.
+        :param kwargs:
+        :return:
+        """
+        messages = self._api.direct_messages(**kwargs)
 
         direct_messages = []
 
