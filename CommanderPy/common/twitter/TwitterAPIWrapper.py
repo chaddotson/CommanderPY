@@ -28,3 +28,5 @@ class TwitterAPIWrapper(object):
             dm = TwitterDM(id, message.sender.id, message.sender.screen_name, message.text)
 
             direct_messages.append(dm)
+
+        return direct_messages
