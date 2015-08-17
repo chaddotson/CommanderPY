@@ -26,15 +26,13 @@ def get_args():
     return parser.parse_args()
 
 
-def get_messages(twitter_api, last_dm_id=None):
+def get_messages(twitter_api, last_mention_id=None):
 
-    return twitter_api.mentions_timeline()
+    if last_mention_id is None:
+        return twitter_api.mentions_timeline()
 
-    # if last_dm_id is None:
-    #     return twitter_api.direct_messages()
-    #
-    # else:
-    #     return twitter_api.direct_messages(last_dm_id)
+    else:
+        return twitter_api.mentions_timeline(last_mention_id)
 
 
 def main():
@@ -58,15 +56,13 @@ def main():
         config.get("TWITTER", "ACCESS_KEY"),
         config.get("TWITTER", "ACCESS_SECRET"))
 
-    messages = get_messages(api)
+    messages = get_messages(api, state.get('last_mention_id', None))
+
+    logger.info("Fetched %d twitter mentions", len(messages) if messages is not None else 0)
 
     for message in messages:
         print message
 
-    # messages = get_messages(api, state.get('last_dm_id', None))
-    #
-    # logger.info("Fetched %d twitter direct messages", len(messages) if messages is not None else 0)
-    #
     # if len(messages) == 0:
     #     return
     #
@@ -76,10 +72,10 @@ def main():
     #     dm = TwitterDM(message.sender.id, message.sender.screen_name, message.text)
     #     publisher.publish(message_queue_name, message=dumps(dm, cls=TwitterDMEncoder))
     #
-    # if len(messages) > 0:
-    #     state['last_dm_id'] = messages[-1].id
-    #
-    # state.sync()
+    if len(messages) > 0:
+        state['last_mention_id'] = messages[-1].id
+
+    state.sync()
 
 
 if __name__ =="__main__":
