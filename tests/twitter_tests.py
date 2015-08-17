@@ -12,19 +12,19 @@ from unittest import TestCase
 
 class TwitterDMEncoderTests(TestCase):
     def test_can_encode_twitter_dm_as_json(self):
-        dm = TwitterDM(1, "Someone", "Test")
+        dm = TwitterDM(42, 1, "Someone", "Test")
 
         converted = dumps(dm, cls=TwitterDMEncoder)
 
         retrieved = loads(converted)
 
-        self.assertDictEqual(retrieved, dict(FROM_ID=1, FROM_SCREEN_NAME="Someone", MESSAGE_TEXT="Test"))
+        self.assertDictEqual(retrieved, dict(ID=42, FROM_ID=1, FROM_SCREEN_NAME="Someone", MESSAGE_TEXT="Test"))
 
 class TwitterDMDecoderTests(TestCase):
     def test_can_decode_twitter_dm_as_json(self):
 
-        jsonstring = """{"FROM_ID":1, "FROM_SCREEN_NAME":"Someone", "MESSAGE_TEXT":"Test"}"""
-        expected = TwitterDM(1, "Someone", "Test")
+        jsonstring = """{"ID": 42, "FROM_ID":1, "FROM_SCREEN_NAME":"Someone", "MESSAGE_TEXT":"Test"}"""
+        expected = TwitterDM(42, 1, "Someone", "Test")
         got = loads(jsonstring, cls=TwitterDMDecoder)
 
         self.assertEqual(got, expected)

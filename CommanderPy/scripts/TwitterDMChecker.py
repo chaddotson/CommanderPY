@@ -65,7 +65,7 @@ def main():
     publisher = MessageQueueBlockingPublisher(message_queue_host, message_queue_user, message_queue_pass)
 
     for message in messages:
-        dm = TwitterDM(message.sender.id, message.sender.screen_name, message.text)
+        dm = TwitterDM(message.id, message.sender.id, message.sender.screen_name, message.text)
         publisher.publish(message_queue_name, message=dumps(dm, cls=TwitterDMEncoder))
 
     if len(messages) > 0:

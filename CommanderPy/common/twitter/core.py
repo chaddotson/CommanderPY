@@ -14,7 +14,8 @@ def get_twitter_api(consumer_key, consumer_secret, access_key, access_secret):
 
 
 class TwitterDM(object):
-    def __init__(self, from_id, from_screen_name, message_text):
+    def __init__(self, id, from_id, from_screen_name, message_text):
+        self.id = id
         self.from_id = from_id
         self.from_screen_name = from_screen_name
         self.message_text = message_text
@@ -28,7 +29,8 @@ class TwitterDMEncoder(JSONEncoder):
     def encode(self, obj):
 
         if isinstance(obj, TwitterDM):
-            obj_as_dict = dict(FROM_ID=obj.from_id,
+            obj_as_dict = dict(ID=obj.id,
+                               FROM_ID=obj.from_id,
                                FROM_SCREEN_NAME=str(obj.from_screen_name),
                                MESSAGE_TEXT=str(obj.message_text))
 
@@ -40,7 +42,8 @@ class TwitterDMEncoder(JSONEncoder):
 class TwitterDMDecoder(JSONDecoder):
     def decode(self, s, _w=WHITESPACE.match):
         obj_as_dict = JSONDecoder.decode(self, s, _w)
-        return TwitterDM(obj_as_dict.get("FROM_ID", None),
+        return TwitterDM(obj_as_dict.get("ID", None),
+                         obj_as_dict.get("FROM_ID", None),
                          obj_as_dict.get("FROM_SCREEN_NAME", None),
                          obj_as_dict.get("MESSAGE_TEXT", None))
 
@@ -52,4 +55,3 @@ def tweet(consumer_key, consumer_secret, access_key, access_secret, message):
     api = tweepy.API(auth)
     api.update_status(status=message)
     logger.info("Message tweeted")
-    
