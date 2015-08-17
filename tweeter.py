@@ -46,13 +46,12 @@ channel.queue_declare(queue=message_queue_name)
 def on_request(ch, method, props, body):
     logger.info("Processing message")
 
-
     results = dict(STATUS="", MESSAGE="")
 
     try:
         message = loads(body)
         # raise KeyboardInterrupt
-        tweet(message["MESSAGE"])
+        tweet(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_KEY, ACCESS_SECRET, message["MESSAGE"])
         results["STATUS"] = "OK"
         ch.basic_ack(delivery_tag = method.delivery_tag)
 

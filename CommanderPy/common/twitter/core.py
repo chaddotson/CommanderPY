@@ -1,8 +1,10 @@
 from json import JSONDecoder, JSONEncoder, loads
 from json.decoder import WHITESPACE
+from logging import getLogger
 
 import tweepy
-from tweeter import logger, CONSUMER_KEY, CONSUMER_SECRET, ACCESS_KEY, ACCESS_SECRET
+
+logger = getLogger(__name__)
 
 
 def get_twitter_api(consumer_key, consumer_secret, access_key, access_secret):
@@ -43,10 +45,11 @@ class TwitterDMDecoder(JSONDecoder):
                          obj_as_dict.get("MESSAGE_TEXT", None))
 
 
-def tweet(message):
+def tweet(consumer_key, consumer_secret, access_key, access_secret, message):
     logger.info("About to tweet!")
-    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-    auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_key, access_secret)
     api = tweepy.API(auth)
     api.update_status(status=message)
     logger.info("Message tweeted")
+    
