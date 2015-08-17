@@ -1,13 +1,27 @@
+from json import dumps, loads
+from unittest import expectedFailure, TestCase
+
 from CommanderPy.common.twitter import TwitterDM, TwitterDMEncoder, TwitterDMDecoder
 
-# def get_twitter_api(consumer_key, consumer_secret, access_key, access_secret):
-#     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-#     auth.set_access_token(access_key, access_secret)
-#     return tweepy.API(auth)
-#
 
-from json import dumps, loads
-from unittest import TestCase
+class TwitterAPIWrapperTests(TestCase):
+    @expectedFailure
+    def test_does_get_twitter_api(self):
+        self.assertTrue(False)
+
+    # TODO: What failures from getting the twitter api?
+
+    @expectedFailure
+    def test_does_get_twitter_direct_messages(self):
+        self.assertTrue(False)
+
+    # TODO: What failures from getting direct messages?
+
+    @expectedFailure
+    def test_does_get_twitter_mentions(self):
+        self.assertTrue(False)
+
+    # TODO: What failures from getting mentions?
 
 
 class TwitterDMEncoderTests(TestCase):
@@ -19,6 +33,7 @@ class TwitterDMEncoderTests(TestCase):
         retrieved = loads(converted)
 
         self.assertDictEqual(retrieved, dict(ID=42, FROM_ID=1, FROM_SCREEN_NAME="Someone", MESSAGE_TEXT="Test"))
+
 
 class TwitterDMDecoderTests(TestCase):
     def test_can_decode_twitter_dm_as_json(self):
