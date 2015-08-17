@@ -30,3 +30,8 @@ class TwitterAPIWrapper(object):
             direct_messages.append(dm)
 
         return direct_messages
+
+    def update_status(self, message):
+        logger.info("About to tweet!")
+        self._api.update_status(status=message)
+        logger.info("Message tweeted")
